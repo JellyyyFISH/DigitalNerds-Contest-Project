@@ -19,6 +19,8 @@ public class COVID19Level6Script : MonoBehaviour
 
     private bool levelWon = true;
 
+    private bool canLoadNextLevel = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,10 +31,10 @@ public class COVID19Level6Script : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetMouseButton(0))
-        {
-            Debug.Log(Input.mousePosition);
-        }
+        //if (Input.GetMouseButton(0))
+        //{
+        //    Debug.Log(Input.mousePosition);
+        //}
 
         if (Input.GetMouseButtonDown(0) && Input.mousePosition.x >= xMin && Input.mousePosition.x <= xMax && Input.mousePosition.y >= yMin && Input.mousePosition.y <= yMax)
         {
@@ -51,11 +53,13 @@ public class COVID19Level6Script : MonoBehaviour
         {
             timeRemaining = 0;
 
-            if (levelWon)
+            if (levelWon && canLoadNextLevel)
             {
                 Debug.Log("YOU WON!");
 
-                Invoke("LoadNextLevel", 2f);
+                canLoadNextLevel = false;
+
+                Invoke("LoadNextLevel", 1f);
 
             }
 
@@ -75,13 +79,27 @@ public class COVID19Level6Script : MonoBehaviour
     void LoadNextLevel()
     {
 
-        int levelNumber = MainMenuManager.levels[Random.Range(1, MainMenuManager.levels.Count)];
+        if (MainMenuManager.levels.Count == 1)
+        {
+            Debug.Log("YOU FINISHED THE GAME");
 
-        MainMenuManager.levels.Remove(levelNumber);
+            Invoke("LoadFinishedMenu", 2f);
+        }
+        else
+        {
+            int levelNumber = MainMenuManager.levels[Random.Range(1, MainMenuManager.levels.Count)];
 
-        Debug.Log("COVID-19 Level" + levelNumber.ToString());
+            MainMenuManager.levels.Remove(levelNumber);
 
-        SceneManager.LoadScene("COVID-19 Level" + levelNumber.ToString());
+            Debug.Log("COVID-19 Level" + levelNumber.ToString());
+
+            SceneManager.LoadScene("COVID-19 Level" + levelNumber.ToString());
+        }
+    }
+
+    void LoadFinishedMenu()
+    {
+        SceneManager.LoadScene("Finished Menu Scene");
     }
 
 }

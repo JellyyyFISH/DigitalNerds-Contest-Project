@@ -66,21 +66,21 @@ public class MouseMovementDetection : MonoBehaviour
         
         if (mouseLastPosition != Input.mousePosition && Input.GetMouseButton(0))
         {
-            Debug.Log("Mouse is moving");
+            //Debug.Log("Mouse is moving");
             mouseMovementTime++;
         }
         else
         {
-            Debug.Log("Mouse is not moving");
+            //Debug.Log("Mouse is not moving");
         }
 
         if (mouseMovementTime >= 30)
         {
-            Debug.Log("MOUSE MOVED ENOUGH");
+            //Debug.Log("MOUSE MOVED ENOUGH");
 
             panel.GetComponent<Image>().sprite = cleanHands;
 
-            Invoke("LoadNextLevel", 2f);
+            Invoke("LoadNextLevel", 1f);
 
         }
 
@@ -91,13 +91,27 @@ public class MouseMovementDetection : MonoBehaviour
     void LoadNextLevel()
     {
 
-        int levelNumber = MainMenuManager.levels[Random.Range(1, MainMenuManager.levels.Count)];
+        if (MainMenuManager.levels.Count == 1)
+        {
+            Debug.Log("YOU FINISHED THE GAME");
 
-        MainMenuManager.levels.Remove(levelNumber);
+            Invoke("LoadFinishedMenu", 2f);
+        }
+        else
+        {
+            int levelNumber = MainMenuManager.levels[Random.Range(1, MainMenuManager.levels.Count)];
 
-        Debug.Log("COVID-19 Level" + levelNumber.ToString());
+            MainMenuManager.levels.Remove(levelNumber);
 
-        SceneManager.LoadScene("COVID-19 Level" + levelNumber.ToString());
+            Debug.Log("COVID-19 Level" + levelNumber.ToString());
+
+            SceneManager.LoadScene("COVID-19 Level" + levelNumber.ToString());
+        }
+    }
+
+    void LoadFinishedMenu()
+    {
+        SceneManager.LoadScene("Finished Menu Scene");
     }
 
     void LoadStartMenu()

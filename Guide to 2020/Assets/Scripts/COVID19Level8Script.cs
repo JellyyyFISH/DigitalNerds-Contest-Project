@@ -4,24 +4,26 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class COVID19Level4Script : MonoBehaviour
+public class COVID19Level8Script : MonoBehaviour
 {
+    private float xMaxLeft = 725;
+    private float xMinLeft = 430;
+    private float yMaxLeft = 870;
+    private float yMinLeft = 200;
 
-    private float xMaxLeft = 810;
-    private float xMinLeft = 620;
-    private float yMaxLeft = 720;
-    private float yMinLeft = 290;
+    private float xMaxRight = 1585;
+    private float xMinRight = 1290;
+    private float yMaxRight = 895;
+    private float yMinRight = 230;
 
-    private float xMaxRight = 1315;
-    private float xMinRight = 1140;
-    private float yMaxRight = 740;
-    private float yMinRight = 285;
-
-    public Sprite splitLeft;
-    public Sprite splitRight;
-    public Sprite splitBoth;
+    public Sprite stoppedLeft;
+    public Sprite stoppedRight;
+    public Sprite stoppedBoth;
 
     public GameObject panel;
+
+    public Texture2D cursorTexture;
+    Vector2 cursorHotspot;
 
     public Slider timerSlider;
 
@@ -29,14 +31,15 @@ public class COVID19Level4Script : MonoBehaviour
     private float timeRemaining = timerMax;
 
     private bool canLoadNextLevel = true;
+    private bool levelLost = true;
 
     // Start is called before the first frame update
     void Start()
-    {
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-    }
+    { 
+        cursorHotspot = new Vector2(cursorTexture.width / 2, cursorTexture.height / 2);
 
-    
+        Cursor.SetCursor(cursorTexture, cursorHotspot, CursorMode.ForceSoftware);
+    }
 
     // Update is called once per frame
     void Update()
@@ -46,36 +49,38 @@ public class COVID19Level4Script : MonoBehaviour
         //    Debug.Log(Input.mousePosition);
         //}
 
-        if (Input.GetMouseButtonDown(0) && Input.mousePosition.x >= xMinLeft && Input.mousePosition.x <= xMaxLeft && Input.mousePosition.y >= yMinLeft && Input.mousePosition.y <= yMaxLeft && panel.GetComponent<Image>().sprite != splitLeft)
+        if (Input.GetMouseButtonDown(0) && Input.mousePosition.x >= xMinLeft && Input.mousePosition.x <= xMaxLeft && Input.mousePosition.y >= yMinLeft && Input.mousePosition.y <= yMaxLeft && panel.GetComponent<Image>().sprite != stoppedLeft)
         {
-            if (panel.GetComponent<Image>().sprite == splitRight)
+            if (panel.GetComponent<Image>().sprite == stoppedRight)
             {
-                panel.GetComponent<Image>().sprite = splitBoth;
+                panel.GetComponent<Image>().sprite = stoppedBoth;
                 Debug.Log("Pressed Left - Split Both");
             }
             else
             {
-                panel.GetComponent<Image>().sprite = splitLeft;
+                panel.GetComponent<Image>().sprite = stoppedLeft;
                 Debug.Log("Pressed Left - Split Left");
             }
         }
-        else if (Input.GetMouseButtonDown(0) && Input.mousePosition.x >= xMinRight && Input.mousePosition.x <= xMaxRight && Input.mousePosition.y >= yMinRight && Input.mousePosition.y <= yMaxRight && panel.GetComponent<Image>().sprite != splitRight)
+        else if (Input.GetMouseButtonDown(0) && Input.mousePosition.x >= xMinRight && Input.mousePosition.x <= xMaxRight && Input.mousePosition.y >= yMinRight && Input.mousePosition.y <= yMaxRight && panel.GetComponent<Image>().sprite != stoppedRight)
         {
-            if (panel.GetComponent<Image>().sprite == splitLeft)
+            if (panel.GetComponent<Image>().sprite == stoppedLeft)
             {
-                panel.GetComponent<Image>().sprite = splitBoth;
+                panel.GetComponent<Image>().sprite = stoppedBoth;
                 Debug.Log("Pressed Right - Split Both");
             }
             else
             {
-                panel.GetComponent<Image>().sprite = splitRight;
+                panel.GetComponent<Image>().sprite = stoppedRight;
                 Debug.Log("Pressed Right - Split Right");
             }
-        }
-
-        if (panel.GetComponent<Image>().sprite == splitBoth && canLoadNextLevel)
+        } 
+        if (panel.GetComponent<Image>().sprite == stoppedBoth && canLoadNextLevel)
         {
             canLoadNextLevel = false;
+
+            levelLost = true;
+
             Invoke("LoadNextLevel", 1f);
         }
 
@@ -89,16 +94,18 @@ public class COVID19Level4Script : MonoBehaviour
         {
             timeRemaining = 0;
 
-            if (panel.GetComponent<Image>().sprite != splitBoth)
+            if (levelLost)
             {
-                Debug.Log("YOU LOST!");
-
                 Invoke("LoadStartMenu", 2f);
-
             }
 
         }
 
+    }
+
+    void LoadStartMenu()
+    {
+        SceneManager.LoadScene("Start Menu Scene");
     }
 
     float CalculatedSliderValue()
@@ -125,13 +132,8 @@ public class COVID19Level4Script : MonoBehaviour
 
             SceneManager.LoadScene("COVID-19 Level" + levelNumber.ToString());
         }
+        
     }
-
-    void LoadStartMenu()
-    {
-        SceneManager.LoadScene("Start Menu Scene");
-    }
-
     void LoadFinishedMenu()
     {
         SceneManager.LoadScene("Finished Menu Scene");

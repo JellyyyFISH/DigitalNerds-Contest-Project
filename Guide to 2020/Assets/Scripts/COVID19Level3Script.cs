@@ -30,18 +30,18 @@ public class COVID19Level3Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0) && Input.mousePosition.x >= xMin && Input.mousePosition.x <= xMax && Input.mousePosition.y >= yMin && Input.mousePosition.y <= yMax)
+        if (Input.GetMouseButtonDown(0) && Input.mousePosition.x >= xMin && Input.mousePosition.x <= xMax && Input.mousePosition.y >= yMin && Input.mousePosition.y <= yMax)
         {
             panel.GetComponent<Image>().sprite = maskOnFace;
 
-            Invoke("LoadNextLevel", 2f);
+            Invoke("LoadNextLevel", 1f);
 
         }
 
-        if (Input.GetMouseButton(0))
-        {
-            Debug.Log(Input.mousePosition);
-        }
+        //if (Input.GetMouseButton(0))
+        //{
+        //    Debug.Log(Input.mousePosition);
+        //}
 
         timerSlider.value = CalculatedSliderValue();
 
@@ -73,18 +73,32 @@ public class COVID19Level3Script : MonoBehaviour
     void LoadNextLevel()
     {
 
-        int levelNumber = MainMenuManager.levels[Random.Range(1, MainMenuManager.levels.Count)];
+        if (MainMenuManager.levels.Count == 1)
+        {
+            Debug.Log("YOU FINISHED THE GAME");
 
-        MainMenuManager.levels.Remove(levelNumber);
+            Invoke("LoadFinishedMenu", 2f);
+        }
+        else
+        {
+            int levelNumber = MainMenuManager.levels[Random.Range(1, MainMenuManager.levels.Count)];
 
-        Debug.Log("COVID-19 Level" + levelNumber.ToString());
+            MainMenuManager.levels.Remove(levelNumber);
 
-        SceneManager.LoadScene("COVID-19 Level" + levelNumber.ToString());
+            Debug.Log("COVID-19 Level" + levelNumber.ToString());
+
+            SceneManager.LoadScene("COVID-19 Level" + levelNumber.ToString());
+        }
     }
 
     void LoadStartMenu()
     {
         SceneManager.LoadScene("Start Menu Scene");
+    }
+
+    void LoadFinishedMenu()
+    {
+        SceneManager.LoadScene("Finished Menu Scene");
     }
 
 }
