@@ -42,6 +42,15 @@ public class MouseMovementDetection : MonoBehaviour
         else if (timeRemaining <= 0)
         {
             timeRemaining = 0;
+
+            if (panel.GetComponent<Image>().sprite != cleanHands)
+            {
+                Debug.Log("YOU LOST!");
+
+                Invoke("LoadStartMenu", 2f);
+
+            }
+
         }
 
     }
@@ -90,5 +99,11 @@ public class MouseMovementDetection : MonoBehaviour
 
         SceneManager.LoadScene("COVID-19 Level" + levelNumber.ToString());
     }
+
+    void LoadStartMenu()
+    {
+        SceneManager.LoadScene("Start Menu Scene");
+    }
+
 
 }

@@ -6,7 +6,12 @@ using UnityEngine.SceneManagement;
 public class MainMenuManager : MonoBehaviour
 {
 
-    static int[] levelsInput = { 0, 1, 2, 3, 4, 5};
+    void Start()
+    {
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+    }
+
+    static int[] levelsInput = { 0, 1, 2, 3, 4, 5, 6, 7 };
 
     public static List<int> levels = new List<int>(levelsInput);
 

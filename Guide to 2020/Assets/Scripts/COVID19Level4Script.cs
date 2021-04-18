@@ -23,6 +23,11 @@ public class COVID19Level4Script : MonoBehaviour
 
     public GameObject panel;
 
+    public Slider timerSlider;
+
+    private const float timerMax = 10f;
+    private float timeRemaining = timerMax;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -71,6 +76,31 @@ public class COVID19Level4Script : MonoBehaviour
             Invoke("LoadNextLevel", 2f);
         }
 
+        timerSlider.value = CalculatedSliderValue();
+
+        if (timeRemaining > 0)
+        {
+            timeRemaining -= Time.deltaTime;
+        }
+        else if (timeRemaining <= 0)
+        {
+            timeRemaining = 0;
+
+            if (panel.GetComponent<Image>().sprite != splitBoth)
+            {
+                Debug.Log("YOU LOST!");
+
+                Invoke("LoadStartMenu", 2f);
+
+            }
+
+        }
+
+    }
+
+    float CalculatedSliderValue()
+    {
+        return (timeRemaining / timerMax);
     }
 
     void LoadNextLevel()
@@ -85,5 +115,9 @@ public class COVID19Level4Script : MonoBehaviour
         SceneManager.LoadScene("COVID-19 Level" + levelNumber.ToString());
     }
 
+    void LoadStartMenu()
+    {
+        SceneManager.LoadScene("Start Menu Scene");
+    }
 
 }
